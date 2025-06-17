@@ -1,0 +1,40 @@
+import numpy as np
+
+# Step 1: Generate a 2D array (5x4) with random integers between 1 and 50
+np.random.seed(0)  # Optional: for reproducibility
+arr = np.random.randint(1, 51, size=(5, 4))
+print("Original Array:\n", arr)
+
+# Step 2: Extract elements along the anti-diagonal (top-right to bottom-left)
+anti_diagonal = [arr[i, -i-1] for i in range(min(arr.shape))]
+print("Anti-diagonal elements:", anti_diagonal)
+
+# Step 3: Compute and print the maximum value in each row
+row_max = np.max(arr, axis=1)
+print("Maximum value in each row:", row_max)
+
+# Step 4: Create a new array with elements <= overall mean
+mean_val = np.mean(arr)
+filtered_array = arr[arr <= mean_val]
+print("Elements <= mean (mean =", mean_val, "):", filtered_array)
+
+# Step 5: Boundary traversal function
+def numpy_boundary_traversal(matrix):
+    rows, cols = matrix.shape
+    boundary = []
+    # Top row
+    boundary.extend(matrix[0, :])
+    # Right column (excluding top and bottom)
+    if rows > 1:
+        boundary.extend(matrix[1:rows-1, -1])
+    # Bottom row (reversed)
+    if rows > 1:
+        boundary.extend(matrix[-1, ::-1])
+    # Left column (reversed, excluding top and bottom)
+    if cols > 1:
+        boundary.extend(matrix[rows-2:0:-1, 0])
+    return boundary
+
+# Run the function and print the boundary traversal
+boundary_elements = numpy_boundary_traversal(arr)
+print("Boundary traversal:", boundary_elements)
