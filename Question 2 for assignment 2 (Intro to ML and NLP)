@@ -1,0 +1,37 @@
+import numpy as np
+
+# Step 1: Create a 1D array of 20 random floats between 0 and 10
+np.random.seed(42)  # For reproducibility
+arr = np.random.uniform(0, 10, 20)
+
+# Step 2: Round all elements to 2 decimal places
+rounded_arr = np.round(arr, 2)
+print("Original Rounded Array:\n", rounded_arr)
+
+# Step 3: Calculate and print min, max, and median
+min_val = np.min(rounded_arr)
+max_val = np.max(rounded_arr)
+median_val = np.median(rounded_arr)
+print(f"Min: {min_val}, Max: {max_val}, Median: {median_val}")
+
+# Step 4: Replace all elements < 5 with their squares
+modified_arr = np.where(rounded_arr < 5, np.round(rounded_arr**2, 2), rounded_arr)
+print("Array after squaring elements < 5:\n", modified_arr)
+
+# Step 5: Function for alternate sorting
+def numpy_alternate_sort(array):
+    sorted_arr = np.sort(array)
+    result = []
+    left = 0
+    right = len(sorted_arr) - 1
+    while left <= right:
+        result.append(sorted_arr[left])
+        left += 1
+        if left <= right:
+            result.append(sorted_arr[right])
+            right -= 1
+    return np.array(result)
+
+# Apply the alternate sort function
+alternating_sorted_array = numpy_alternate_sort(rounded_arr)
+print("Alternating Sorted Array:\n", alternating_sorted_array)
