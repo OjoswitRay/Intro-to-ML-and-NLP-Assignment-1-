@@ -1,0 +1,45 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+
+# Step 1: Generate synthetic dataset
+positive_reviews = [f"I loved this movie. It was amazing! #{i}" for i in range(50)]
+negative_reviews = [f"I hated this movie. It was terrible! #{i}" for i in range(50)]
+
+reviews = positive_reviews + negative_reviews
+sentiments = ['positive'] * 50 + ['negative'] * 50
+
+df = pd.DataFrame({
+    'Review': reviews,
+    'Sentiment': sentiments
+})
+
+# Step 2: Tokenize using CountVectorizer
+vectorizer = CountVectorizer(stop_words='english', max_features=500)
+X = vectorizer.fit_transform(df['Review'])
+y = df['Sentiment']
+
+# Step 3: Split dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Step 4: Train Naive Bayes classifier
+model = MultinomialNB()
+model.fit(X_train, y_train)
+
+# Step 5: Evaluate accuracy on test data
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Test Set Accuracy:", accuracy)
+
+# Step 6: Define prediction function
+def predict_review_sentiment(model, vectorizer, review):
+    review_vector = vectorizer.transform([review])
+    return model.predict(review_vector)[0]
+
+print(predict_review_sentiment(model, vectorizer, "The plot was fantastic and actors did a great job"))
+print(predict_review_sentiment(model, vectorizer, "Awful film. I will never watch it again."))
